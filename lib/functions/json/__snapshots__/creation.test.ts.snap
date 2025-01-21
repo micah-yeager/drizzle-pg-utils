@@ -1,0 +1,17 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`should execute toJson correctly 1`] = `
+[
+  {
+    "to_json": "{"test":0}",
+  },
+]
+`;
+
+exports[`should execute toJsonb correctly 1`] = `
+[
+  {
+    "to_jsonb": "{"test":0}",
+  },
+]
+`;

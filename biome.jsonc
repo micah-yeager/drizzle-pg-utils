@@ -1,0 +1,71 @@
+{
+  "$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
+  // Global configuration.
+  "files": {
+    "ignoreUnknown": true,
+    "ignore": []
+  },
+  "formatter": {
+    "formatWithErrors": true
+  },
+  "organizeImports": {
+    // Enabled by default.
+  },
+  "linter": {
+    "rules": {
+      "all": true,
+      "correctness": {
+        // No support for TypeScript aliases yet.
+        "noUndeclaredDependencies": "off",
+        // Since we're using a bundler, this is unnecessary.
+        "useImportExtensions": "off"
+      },
+      "nursery": {},
+      "performance": {
+        "noReExportAll": "off"
+      },
+      "style": {
+        "noNonNullAssertion": "off",
+        "useNamingConvention": {
+          "level": "warn",
+          "options": {
+            // Too inflexible for our use-case.
+            "strictCase": false
+          }
+        },
+        // Requires more boilerplate for no real readability benefit.
+        "noImplicitBoolean": "off",
+        // Helpful for some libraries, e.g. Node built-ins.
+        "noNamespaceImport": "off",
+        // Requires more boilerplate for no real readability benefit.
+        "useBlockStatements": "off",
+        // Requires more boilerplate in some instances for no real readability
+        // benefit.
+        "useCollapsedElseIf": "off",
+        // Requires more boilerplate for no real readability benefit.
+        "useExplicitLengthCheck": "off",
+        // While `for...of` is more readable, it's sometimes substantially slower
+        // than an index-based loop.
+        "useForOf": "off"
+      },
+      "suspicious": {
+        // Async functions without `await` are still useful, since exceptions
+        // reject the promise instead of being synchronously thrown.
+        "useAwait": "off",
+        "noExplicitAny": "off"
+      }
+    }
+  },
+  // Project configuration.
+  "vcs": {
+    "enabled": true,
+    "clientKind": "git",
+    "useIgnoreFile": true
+  },
+  // Language configuration.
+  "javascript": {
+    "formatter": {
+      "semicolons": "asNeeded"
+    }
+  }
+}

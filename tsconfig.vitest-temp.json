@@ -1,0 +1,30 @@
+{
+  "include": [
+    "**/*.ts"
+  ],
+  "compilerOptions": {
+    "lib": [
+      "DOM",
+      "DOM.Iterable",
+      "ES2022"
+    ],
+    "skipLibCheck": true,
+    "checkJs": true,
+    "isolatedModules": true,
+    "esModuleInterop": true,
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "resolveJsonModule": true,
+    "target": "ES2022",
+    "strict": true,
+    "allowJs": true,
+    "forceConsistentCasingInFileNames": true,
+    "stripInternal": true,
+    "noErrorTruncation": true,
+    "baseUrl": "./",
+    "noEmit": true,
+    "emitDeclarationOnly": false,
+    "incremental": true,
+    "tsBuildInfoFile": "/Users/micah/dev/drizzle-pg-utils/node_modules/.pnpm/vitest@3.0.2_@types+node@22.1.0_@vitest+ui@3.0.2/node_modules/vitest/dist/chunks/tsconfig.tmp.tsbuildinfo"
+  }
+}
