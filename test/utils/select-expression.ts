@@ -1,11 +1,10 @@
 import { type SQL, sql } from "drizzle-orm"
 
-export async function selectExpression<TType>(expression: SQL<TType>) {
-	const {
-		rows: [row],
-	} = await globalThis.db.execute<Record<"test", TType>>(
-		sql`select ${expression} as test`,
-	)
+const COLUMN_ALIAS = "__test__"
 
-	return row.test
+export async function selectExpression<TType>(expression: SQL<TType>) {
+	const result = await globalThis.db.execute<
+		Record<typeof COLUMN_ALIAS, TType>
+	>(sql`select ${expression} as ${sql.raw(COLUMN_ALIAS)}`)
+	return result.rows[0][COLUMN_ALIAS]
 }
