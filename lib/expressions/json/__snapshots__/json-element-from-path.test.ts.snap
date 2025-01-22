@@ -1,0 +1,17 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`should execute correctly with jsonElementFromPathArray 1`] = `
+[
+  {
+    "?column?": "value",
+  },
+]
+`;
+
+exports[`should execute correctly with jsonElementFromPathArrayAsText 1`] = `
+[
+  {
+    "?column?": "value",
+  },
+]
+`;

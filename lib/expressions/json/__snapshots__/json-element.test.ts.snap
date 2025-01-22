@@ -19,19 +19,3 @@ exports[`should execute correctly with jsonElementAsText 1`] = `
   },
 ]
 `;
-
-exports[`should execute correctly with jsonElementFromPathArray 1`] = `
-[
-  {
-    "?column?": "value",
-  },
-]
-`;
-
-exports[`should execute correctly with jsonElementFromPathArrayAsText 1`] = `
-[
-  {
-    "?column?": "value",
-  },
-]
-`;
