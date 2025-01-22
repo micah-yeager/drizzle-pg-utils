@@ -1,13 +1,22 @@
 import { sql } from "drizzle-orm"
-import { text } from "drizzle-orm/pg-core"
+import { integer, text } from "drizzle-orm/pg-core"
 import { expect, it } from "vitest"
+import { selectExpression } from "../../../test/utils/select-expression"
 import { cast } from "../cast"
 import { toJson } from "./to-json"
 
-it("should execute toJson correctly", async () => {
-	const toTest = toJson(cast(sql`${JSON.stringify({ test: 0 })}`, text))
+it("should return number as number", async () => {
+	const value = 0
+	const expression = toJson(cast(sql`${value}`, integer))
 
-	const result = await globalThis.db.execute(sql`select ${toTest}`)
+	await expect(selectExpression(expression)).resolves.toEqual(value)
+})
 
-	expect(result.rows).toMatchSnapshot()
+it("should return object as JSON string", async () => {
+	const testObj = { test: 0 }
+	const expression = toJson(cast(sql`${testObj}`, text))
+
+	await expect(selectExpression(expression)).resolves.toEqual(
+		JSON.stringify(testObj),
+	)
 })
