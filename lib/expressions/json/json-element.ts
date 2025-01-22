@@ -15,5 +15,5 @@ export function jsonElementAsText<TType, TSelector extends string | number>(
 	json: JsonColumn<TType> | SQL<TType>,
 	selector: TSelector | SQL<TSelector>,
 ): SQL<JsonElement<TType, [TSelector], { asText: true }>> {
-	return sql`${json}->${selector}`
+	return sql`${json}->>${selector}`
 }
