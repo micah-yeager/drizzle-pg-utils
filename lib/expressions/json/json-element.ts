@@ -1,5 +1,5 @@
 import { type SQL, sql } from "drizzle-orm"
-import type { JsonColumn } from "../../functions/json/util"
+import type { JsonColumn } from "../../functions/json/utils/column-types"
 import type { JsonElement } from "./util/types"
 
 /** @see https://www.postgresql.org/docs/current/functions-json.html#FUNCTIONS-JSON-PROCESSING */

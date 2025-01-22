@@ -1,6 +1,10 @@
 import { json, jsonb, pgTable } from "drizzle-orm/pg-core"
 import { assertType, describe, expectTypeOf, it } from "vitest"
-import type { BinaryJsonColumn, JsonColumn, TextJsonColumn } from "./util"
+import type {
+	BinaryJsonColumn,
+	JsonColumn,
+	TextJsonColumn,
+} from "./column-types"
 
 type TestDataType = { test: string }
 
