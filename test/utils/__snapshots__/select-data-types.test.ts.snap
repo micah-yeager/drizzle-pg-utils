@@ -1,0 +1,151 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`should allow table as input 1`] = `
+[
+  {
+    "columnName": "id",
+    "dataType": "integer",
+  },
+  {
+    "columnName": "bpchar",
+    "dataType": "bpchar",
+  },
+]
+`;
+
+exports[`should allow view as input 1`] = `
+[
+  {
+    "columnName": "oid",
+    "dataType": "oid",
+  },
+  {
+    "columnName": "relname",
+    "dataType": "name",
+  },
+  {
+    "columnName": "relnamespace",
+    "dataType": "oid",
+  },
+  {
+    "columnName": "reltype",
+    "dataType": "oid",
+  },
+  {
+    "columnName": "reloftype",
+    "dataType": "oid",
+  },
+  {
+    "columnName": "relowner",
+    "dataType": "oid",
+  },
+  {
+    "columnName": "relam",
+    "dataType": "oid",
+  },
+  {
+    "columnName": "relfilenode",
+    "dataType": "oid",
+  },
+  {
+    "columnName": "reltablespace",
+    "dataType": "oid",
+  },
+  {
+    "columnName": "relpages",
+    "dataType": "integer",
+  },
+  {
+    "columnName": "reltuples",
+    "dataType": "real",
+  },
+  {
+    "columnName": "relallvisible",
+    "dataType": "integer",
+  },
+  {
+    "columnName": "reltoastrelid",
+    "dataType": "oid",
+  },
+  {
+    "columnName": "relhasindex",
+    "dataType": "boolean",
+  },
+  {
+    "columnName": "relisshared",
+    "dataType": "boolean",
+  },
+  {
+    "columnName": "relpersistence",
+    "dataType": ""char"",
+  },
+  {
+    "columnName": "relkind",
+    "dataType": ""char"",
+  },
+  {
+    "columnName": "relnatts",
+    "dataType": "smallint",
+  },
+  {
+    "columnName": "relchecks",
+    "dataType": "smallint",
+  },
+  {
+    "columnName": "relhasrules",
+    "dataType": "boolean",
+  },
+  {
+    "columnName": "relhastriggers",
+    "dataType": "boolean",
+  },
+  {
+    "columnName": "relhassubclass",
+    "dataType": "boolean",
+  },
+  {
+    "columnName": "relrowsecurity",
+    "dataType": "boolean",
+  },
+  {
+    "columnName": "relforcerowsecurity",
+    "dataType": "boolean",
+  },
+  {
+    "columnName": "relispopulated",
+    "dataType": "boolean",
+  },
+  {
+    "columnName": "relreplident",
+    "dataType": ""char"",
+  },
+  {
+    "columnName": "relispartition",
+    "dataType": "boolean",
+  },
+  {
+    "columnName": "relrewrite",
+    "dataType": "oid",
+  },
+  {
+    "columnName": "relfrozenxid",
+    "dataType": "xid",
+  },
+  {
+    "columnName": "relminmxid",
+    "dataType": "xid",
+  },
+  {
+    "columnName": "relacl",
+    "dataType": "aclitem[]",
+  },
+  {
+    "columnName": "reloptions",
+    "dataType": "text[]",
+  },
+  {
+    "columnName": "relpartbound",
+    "dataType": "pg_node_tree",
+  },
+]
+`;
