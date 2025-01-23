@@ -1,4 +1,5 @@
 import { SQL, sql } from "drizzle-orm"
+import type { IsAny, IsUnknown } from "type-fest"
 import type { JsonColumn } from "../../functions/json/utils/column-types"
 import type { JsonFieldByKey } from "./util/types"
 
@@ -21,24 +22,36 @@ function normalizeSelectors<
 
 /** @see https://www.postgresql.org/docs/current/functions-json.html#FUNCTIONS-JSON-PROCESSING */
 export function jsonFieldByKeyArray<
-	TType,
-	U extends string | number,
-	TSelectors extends Readonly<[U, ...U[]] | never[]>,
+	TReturn,
+	TType = unknown,
+	U extends string | number = string | number,
+	TSelectors extends Readonly<[U, ...U[]] | never[]> = Readonly<
+		[U, ...U[]] | never[]
+	>,
 >(
 	json: JsonColumn<TType> | SQL<TType>,
 	selectors: TSelectors | SQL<TSelectors>,
-): SQL<JsonFieldByKey<TType, TSelectors>> {
+): SQL<
+	IsUnknown<TReturn> extends true ? JsonFieldByKey<TType, TSelectors> : TReturn
+> {
 	return sql`${json}#>${normalizeSelectors(selectors)}`
 }
 
 /** @see https://www.postgresql.org/docs/current/functions-json.html#FUNCTIONS-JSON-PROCESSING */
 export function jsonFieldByKeyArrayAsText<
-	TType,
-	U extends string | number,
-	TSelectors extends Readonly<[U, ...U[]] | never[]>,
+	TReturn extends string | null = any,
+	TType = unknown,
+	U extends string | number = string | number,
+	TSelectors extends Readonly<[U, ...U[]] | never[]> = Readonly<
+		[U, ...U[]] | never[]
+	>,
 >(
 	json: JsonColumn<TType> | SQL<TType>,
 	selectors: TSelectors | SQL<TSelectors>,
-): SQL<JsonFieldByKey<TType, TSelectors, { asText: true }>> {
+): SQL<
+	IsAny<TReturn> extends true
+		? JsonFieldByKey<TType, TSelectors, { asText: true }>
+		: TReturn
+> {
 	return sql`${json}#>>${normalizeSelectors(selectors)}`
 }

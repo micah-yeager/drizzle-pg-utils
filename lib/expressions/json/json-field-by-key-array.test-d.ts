@@ -1,4 +1,4 @@
-import type { SQL } from "drizzle-orm"
+import { type SQL, sql } from "drizzle-orm"
 import { jsonb, pgTable } from "drizzle-orm/pg-core"
 import { describe, expectTypeOf, it } from "vitest"
 import {
@@ -7,6 +7,12 @@ import {
 } from "./json-field-by-key-array"
 
 describe("jsonFieldByKeyArray", () => {
+	it("should allow overriding the return type", () => {
+		expectTypeOf(jsonFieldByKeyArray<number>(sql``, [])).toEqualTypeOf<
+			SQL<number>
+		>()
+	})
+
 	it("should return unknown for non-typed JSON", () => {
 		const tests = pgTable("tests", { json: jsonb("json") })
 
@@ -62,6 +68,19 @@ describe("jsonFieldByKeyArray", () => {
 })
 
 describe("jsonFieldByKeyArrayAsText", () => {
+	it("should allow overriding the return type", () => {
+		expectTypeOf(jsonFieldByKeyArrayAsText<string>(sql``, [])).toEqualTypeOf<
+			SQL<string>
+		>()
+	})
+
+	it("should disallow non-string return type overrides", () => {
+		// @ts-expect-error: `number` does not extend `string`.
+		expectTypeOf(jsonFieldByKeyArrayAsText<number>(sql``, [])).toEqualTypeOf<
+			SQL<number>
+		>()
+	})
+
 	it("should return unknown for non-typed JSON", () => {
 		const tests = pgTable("tests", { json: jsonb("json") })
 
