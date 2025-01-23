@@ -4,7 +4,7 @@ import type { JsonColumn } from "../../functions/json/utils/column-types"
 import type { JsonFieldByKey } from "./util/types"
 
 /** @see https://www.postgresql.org/docs/current/functions-json.html#FUNCTIONS-JSON-PROCESSING */
-export function jsonFieldByKey<
+export function jsonValueByKey<
 	TReturn,
 	TType = unknown,
 	TSelector extends string | number = string | number,

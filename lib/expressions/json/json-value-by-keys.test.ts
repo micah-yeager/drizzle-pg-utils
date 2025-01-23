@@ -3,13 +3,13 @@ import { json } from "drizzle-orm/pg-core"
 import { expect, it } from "vitest"
 import { selectExpression } from "../../../test/utils/select-expression"
 import { cast } from "../../functions/cast"
-import { jsonFieldByKeys, jsonFieldByKeysAsText } from "./json-field-by-keys"
+import { jsonFieldByKeysAsText, jsonValueByKeys } from "./json-value-by-keys"
 
 const testObj = { test: 0, nested: { key: "value" } } as const
 const keys = ["nested", "key"] as const
 
-it("should execute correctly with jsonFieldByKeys", async () => {
-	const expression = jsonFieldByKeys(
+it("should execute correctly with jsonValueByKeys", async () => {
+	const expression = jsonValueByKeys(
 		cast(sql`${JSON.stringify(testObj)}`, json),
 		keys,
 	)
