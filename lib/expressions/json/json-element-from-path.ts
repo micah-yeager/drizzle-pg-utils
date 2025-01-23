@@ -16,7 +16,7 @@ function normalizeSelectors<
 	return sql`array[${sql.join(
 		selectors.map((item) => sql`${String(item)}`),
 		sql.raw(","),
-	)}]` as SQL<TSelectors>
+	)}]`
 }
 
 /** @see https://www.postgresql.org/docs/current/functions-json.html#FUNCTIONS-JSON-PROCESSING */
