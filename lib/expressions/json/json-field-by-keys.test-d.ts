@@ -1,14 +1,11 @@
 import { type SQL, sql } from "drizzle-orm"
 import { jsonb, pgTable } from "drizzle-orm/pg-core"
 import { describe, expectTypeOf, it } from "vitest"
-import {
-	jsonFieldByKeyArray,
-	jsonFieldByKeyArrayAsText,
-} from "./json-field-by-key-array"
+import { jsonFieldByKeys, jsonFieldByKeysAsText } from "./json-field-by-keys"
 
-describe("jsonFieldByKeyArray", () => {
+describe("jsonFieldByKeys", () => {
 	it("should allow overriding the return type", () => {
-		expectTypeOf(jsonFieldByKeyArray<number>(sql``, [])).toEqualTypeOf<
+		expectTypeOf(jsonFieldByKeys<number>(sql``, [])).toEqualTypeOf<
 			SQL<number>
 		>()
 	})
@@ -16,7 +13,7 @@ describe("jsonFieldByKeyArray", () => {
 	it("should return unknown for non-typed JSON", () => {
 		const tests = pgTable("tests", { json: jsonb("json") })
 
-		expectTypeOf(jsonFieldByKeyArray(tests.json, ["test"])).toEqualTypeOf<
+		expectTypeOf(jsonFieldByKeys(tests.json, ["test"])).toEqualTypeOf<
 			SQL<unknown>
 		>()
 	})
@@ -28,20 +25,20 @@ describe("jsonFieldByKeyArray", () => {
 			jsonNestedObject: jsonb("json_nested_object").$type<{ nested: [0] }>(),
 		})
 
-		expectTypeOf(jsonFieldByKeyArray(tests.jsonArray, [0])).toEqualTypeOf<
+		expectTypeOf(jsonFieldByKeys(tests.jsonArray, [0])).toEqualTypeOf<
 			SQL<"static">
 		>()
-		expectTypeOf(jsonFieldByKeyArray(tests.jsonArray, [-1])).toEqualTypeOf<
+		expectTypeOf(jsonFieldByKeys(tests.jsonArray, [-1])).toEqualTypeOf<
 			SQL<"static">
 		>()
-		expectTypeOf(jsonFieldByKeyArray(tests.jsonObject, ["test"])).toEqualTypeOf<
+		expectTypeOf(jsonFieldByKeys(tests.jsonObject, ["test"])).toEqualTypeOf<
 			SQL<number>
 		>()
 		expectTypeOf(
-			jsonFieldByKeyArray(tests.jsonNestedObject, ["nested"]),
+			jsonFieldByKeys(tests.jsonNestedObject, ["nested"]),
 		).toEqualTypeOf<SQL<[0]>>()
 		expectTypeOf(
-			jsonFieldByKeyArray(tests.jsonNestedObject, ["nested", -1]),
+			jsonFieldByKeys(tests.jsonNestedObject, ["nested", -1]),
 		).toEqualTypeOf<SQL<0>>()
 	})
 
@@ -52,31 +49,31 @@ describe("jsonFieldByKeyArray", () => {
 			jsonObject: jsonb("json_object").$type<{ test: number }>(),
 		})
 
-		expectTypeOf(jsonFieldByKeyArray(tests.jsonString, [0])).toEqualTypeOf<
+		expectTypeOf(jsonFieldByKeys(tests.jsonString, [0])).toEqualTypeOf<
 			SQL<null>
 		>()
-		expectTypeOf(jsonFieldByKeyArray(tests.jsonArray, [1])).toEqualTypeOf<
+		expectTypeOf(jsonFieldByKeys(tests.jsonArray, [1])).toEqualTypeOf<
 			SQL<null>
 		>()
-		expectTypeOf(
-			jsonFieldByKeyArray(tests.jsonObject, ["missing"]),
-		).toEqualTypeOf<SQL<null>>()
-		expectTypeOf(
-			jsonFieldByKeyArray(tests.jsonObject, ["test", 0]),
-		).toEqualTypeOf<SQL<null>>()
+		expectTypeOf(jsonFieldByKeys(tests.jsonObject, ["missing"])).toEqualTypeOf<
+			SQL<null>
+		>()
+		expectTypeOf(jsonFieldByKeys(tests.jsonObject, ["test", 0])).toEqualTypeOf<
+			SQL<null>
+		>()
 	})
 })
 
-describe("jsonFieldByKeyArrayAsText", () => {
+describe("jsonFieldByKeysAsText", () => {
 	it("should allow overriding the return type", () => {
-		expectTypeOf(jsonFieldByKeyArrayAsText<string>(sql``, [])).toEqualTypeOf<
+		expectTypeOf(jsonFieldByKeysAsText<string>(sql``, [])).toEqualTypeOf<
 			SQL<string>
 		>()
 	})
 
 	it("should disallow non-string return type overrides", () => {
 		// @ts-expect-error: `number` does not extend `string`.
-		expectTypeOf(jsonFieldByKeyArrayAsText<number>(sql``, [])).toEqualTypeOf<
+		expectTypeOf(jsonFieldByKeysAsText<number>(sql``, [])).toEqualTypeOf<
 			SQL<number>
 		>()
 	})
@@ -84,7 +81,7 @@ describe("jsonFieldByKeyArrayAsText", () => {
 	it("should return unknown for non-typed JSON", () => {
 		const tests = pgTable("tests", { json: jsonb("json") })
 
-		expectTypeOf(jsonFieldByKeyArrayAsText(tests.json, ["test"])).toEqualTypeOf<
+		expectTypeOf(jsonFieldByKeysAsText(tests.json, ["test"])).toEqualTypeOf<
 			SQL<string | null>
 		>()
 	})
@@ -96,20 +93,20 @@ describe("jsonFieldByKeyArrayAsText", () => {
 			jsonNestedObject: jsonb("json_nested_object").$type<{ nested: [0] }>(),
 		})
 
-		expectTypeOf(jsonFieldByKeyArrayAsText(tests.jsonArray, [0])).toEqualTypeOf<
+		expectTypeOf(jsonFieldByKeysAsText(tests.jsonArray, [0])).toEqualTypeOf<
+			SQL<"static">
+		>()
+		expectTypeOf(jsonFieldByKeysAsText(tests.jsonArray, [-1])).toEqualTypeOf<
 			SQL<"static">
 		>()
 		expectTypeOf(
-			jsonFieldByKeyArrayAsText(tests.jsonArray, [-1]),
-		).toEqualTypeOf<SQL<"static">>()
-		expectTypeOf(
-			jsonFieldByKeyArrayAsText(tests.jsonObject, ["test"]),
+			jsonFieldByKeysAsText(tests.jsonObject, ["test"]),
 		).toEqualTypeOf<SQL<string>>()
 		expectTypeOf(
-			jsonFieldByKeyArrayAsText(tests.jsonNestedObject, ["nested"]),
+			jsonFieldByKeysAsText(tests.jsonNestedObject, ["nested"]),
 		).toEqualTypeOf<SQL<string>>()
 		expectTypeOf(
-			jsonFieldByKeyArrayAsText(tests.jsonNestedObject, ["nested", -1]),
+			jsonFieldByKeysAsText(tests.jsonNestedObject, ["nested", -1]),
 		).toEqualTypeOf<SQL<"0">>()
 	})
 
@@ -120,17 +117,17 @@ describe("jsonFieldByKeyArrayAsText", () => {
 			jsonObject: jsonb("json_object").$type<{ test: number }>(),
 		})
 
-		expectTypeOf(
-			jsonFieldByKeyArrayAsText(tests.jsonString, [0]),
-		).toEqualTypeOf<SQL<null>>()
-		expectTypeOf(jsonFieldByKeyArrayAsText(tests.jsonArray, [1])).toEqualTypeOf<
+		expectTypeOf(jsonFieldByKeysAsText(tests.jsonString, [0])).toEqualTypeOf<
+			SQL<null>
+		>()
+		expectTypeOf(jsonFieldByKeysAsText(tests.jsonArray, [1])).toEqualTypeOf<
 			SQL<null>
 		>()
 		expectTypeOf(
-			jsonFieldByKeyArrayAsText(tests.jsonObject, ["missing"]),
+			jsonFieldByKeysAsText(tests.jsonObject, ["missing"]),
 		).toEqualTypeOf<SQL<null>>()
 		expectTypeOf(
-			jsonFieldByKeyArrayAsText(tests.jsonObject, ["test", 0]),
+			jsonFieldByKeysAsText(tests.jsonObject, ["test", 0]),
 		).toEqualTypeOf<SQL<null>>()
 	})
 })

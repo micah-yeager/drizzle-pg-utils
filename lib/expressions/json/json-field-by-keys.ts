@@ -21,7 +21,7 @@ function normalizeSelectors<
 }
 
 /** @see https://www.postgresql.org/docs/current/functions-json.html#FUNCTIONS-JSON-PROCESSING */
-export function jsonFieldByKeyArray<
+export function jsonFieldByKeys<
 	TReturn,
 	TType = unknown,
 	U extends string | number = string | number,
@@ -38,7 +38,7 @@ export function jsonFieldByKeyArray<
 }
 
 /** @see https://www.postgresql.org/docs/current/functions-json.html#FUNCTIONS-JSON-PROCESSING */
-export function jsonFieldByKeyArrayAsText<
+export function jsonFieldByKeysAsText<
 	TReturn extends string | null = any,
 	TType = unknown,
 	U extends string | number = string | number,
