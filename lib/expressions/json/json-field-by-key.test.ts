@@ -23,5 +23,7 @@ it("should execute correctly with jsonFieldByKeyAsText", async () => {
 		key,
 	)
 
-	await expect(selectExpression(expression)).resolves.toEqual(testObj[key])
+	await expect(selectExpression(expression)).resolves.toEqual(
+		JSON.stringify(testObj[key]),
+	)
 })
