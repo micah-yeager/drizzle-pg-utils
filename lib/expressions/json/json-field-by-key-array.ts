@@ -1,6 +1,6 @@
 import { SQL, sql } from "drizzle-orm"
 import type { JsonColumn } from "../../functions/json/utils/column-types"
-import type { JsonElement } from "./util/types"
+import type { JsonFieldByKey } from "./util/types"
 
 /**
  * Normalizes the selectors for a JSON path array.
@@ -27,7 +27,7 @@ export function jsonFieldByKeyArray<
 >(
 	json: JsonColumn<TType> | SQL<TType>,
 	selectors: TSelectors | SQL<TSelectors>,
-): SQL<JsonElement<TType, TSelectors>> {
+): SQL<JsonFieldByKey<TType, TSelectors>> {
 	return sql`${json}#>${normalizeSelectors(selectors)}`
 }
 
@@ -39,6 +39,6 @@ export function jsonFieldByKeyArrayAsText<
 >(
 	json: JsonColumn<TType> | SQL<TType>,
 	selectors: TSelectors | SQL<TSelectors>,
-): SQL<JsonElement<TType, TSelectors, { asText: true }>> {
+): SQL<JsonFieldByKey<TType, TSelectors, { asText: true }>> {
 	return sql`${json}#>>${normalizeSelectors(selectors)}`
 }

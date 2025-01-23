@@ -35,7 +35,7 @@ type ProcessValue<
  * Extracts the specified deeply-nested element of a JSON array or object,
  * mimicking Postgres behavior.
  */
-export type JsonElement<
+export type JsonFieldByKey<
 	TType,
 	TSelectors extends Selectors,
 	Options extends JsonElementOptions = { asText: false },
@@ -51,7 +51,7 @@ export type JsonElement<
 				? null
 				: // Check to satisfy the type checker.
 					Readonly<ArrayTail<TSelectors>> extends Selectors
-					? JsonElement<
+					? JsonFieldByKey<
 							TType[TSelectors[0]],
 							Readonly<ArrayTail<TSelectors>>,
 							Options
