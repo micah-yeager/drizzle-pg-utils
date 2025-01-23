@@ -14,7 +14,7 @@ export function jsonValueByKey<
 ): SQL<
 	IsUnknown<TReturn> extends true ? JsonFieldByKey<TType, [TSelector]> : TReturn
 > {
-	return sql`${json}->${selector}`
+	return sql`${json} -> ${selector}`
 }
 
 /** @see https://www.postgresql.org/docs/current/functions-json.html#FUNCTIONS-JSON-PROCESSING */
@@ -30,5 +30,5 @@ export function jsonFieldByKeyAsText<
 		? JsonFieldByKey<TType, [TSelector], { asText: true }>
 		: TReturn
 > {
-	return sql`${json}->>${selector}`
+	return sql`${json} ->> ${selector}`
 }
