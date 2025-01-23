@@ -1,13 +1,15 @@
 import type { SQL } from "drizzle-orm"
 import { jsonb, pgTable } from "drizzle-orm/pg-core"
 import { describe, expectTypeOf, it } from "vitest"
-import { jsonElement, jsonElementAsText } from "./json-element"
+import { jsonFieldByKey, jsonFieldByKeyAsText } from "./json-field-by-key"
 
-describe("jsonElement", () => {
+describe("jsonFieldByKey", () => {
 	it("should return unknown for non-typed JSON", () => {
 		const tests = pgTable("tests", { json: jsonb("json") })
 
-		expectTypeOf(jsonElement(tests.json, "test")).toEqualTypeOf<SQL<unknown>>()
+		expectTypeOf(jsonFieldByKey(tests.json, "test")).toEqualTypeOf<
+			SQL<unknown>
+		>()
 	})
 
 	it("should return the correct element type", () => {
@@ -17,16 +19,18 @@ describe("jsonElement", () => {
 			jsonNestedObject: jsonb("json_nested_object").$type<{ nested: [0] }>(),
 		})
 
-		expectTypeOf(jsonElement(tests.jsonArray, 0)).toEqualTypeOf<SQL<"static">>()
-		expectTypeOf(jsonElement(tests.jsonArray, -1)).toEqualTypeOf<
+		expectTypeOf(jsonFieldByKey(tests.jsonArray, 0)).toEqualTypeOf<
 			SQL<"static">
 		>()
-		expectTypeOf(jsonElement(tests.jsonObject, "test")).toEqualTypeOf<
+		expectTypeOf(jsonFieldByKey(tests.jsonArray, -1)).toEqualTypeOf<
+			SQL<"static">
+		>()
+		expectTypeOf(jsonFieldByKey(tests.jsonObject, "test")).toEqualTypeOf<
 			SQL<number>
 		>()
-		expectTypeOf(jsonElement(tests.jsonNestedObject, "nested")).toEqualTypeOf<
-			SQL<[0]>
-		>()
+		expectTypeOf(
+			jsonFieldByKey(tests.jsonNestedObject, "nested"),
+		).toEqualTypeOf<SQL<[0]>>()
 	})
 
 	it("should return null if the element does not exist", () => {
@@ -36,19 +40,19 @@ describe("jsonElement", () => {
 			jsonObject: jsonb("json_object").$type<{ test: number }>(),
 		})
 
-		expectTypeOf(jsonElement(tests.jsonString, 0)).toEqualTypeOf<SQL<null>>()
-		expectTypeOf(jsonElement(tests.jsonArray, 1)).toEqualTypeOf<SQL<null>>()
-		expectTypeOf(jsonElement(tests.jsonObject, "missing")).toEqualTypeOf<
+		expectTypeOf(jsonFieldByKey(tests.jsonString, 0)).toEqualTypeOf<SQL<null>>()
+		expectTypeOf(jsonFieldByKey(tests.jsonArray, 1)).toEqualTypeOf<SQL<null>>()
+		expectTypeOf(jsonFieldByKey(tests.jsonObject, "missing")).toEqualTypeOf<
 			SQL<null>
 		>()
 	})
 })
 
-describe("jsonElementAsText", () => {
+describe("jsonFieldByKeyAsText", () => {
 	it("should return unknown for non-typed JSON", () => {
 		const tests = pgTable("tests", { json: jsonb("json") })
 
-		expectTypeOf(jsonElementAsText(tests.json, "test")).toEqualTypeOf<
+		expectTypeOf(jsonFieldByKeyAsText(tests.json, "test")).toEqualTypeOf<
 			SQL<string | null>
 		>()
 	})
@@ -60,17 +64,17 @@ describe("jsonElementAsText", () => {
 			jsonNestedObject: jsonb("json_nested_object").$type<{ nested: [0] }>(),
 		})
 
-		expectTypeOf(jsonElementAsText(tests.jsonArray, 0)).toEqualTypeOf<
+		expectTypeOf(jsonFieldByKeyAsText(tests.jsonArray, 0)).toEqualTypeOf<
 			SQL<"static">
 		>()
-		expectTypeOf(jsonElementAsText(tests.jsonArray, -1)).toEqualTypeOf<
+		expectTypeOf(jsonFieldByKeyAsText(tests.jsonArray, -1)).toEqualTypeOf<
 			SQL<"static">
 		>()
-		expectTypeOf(jsonElementAsText(tests.jsonObject, "test")).toEqualTypeOf<
+		expectTypeOf(jsonFieldByKeyAsText(tests.jsonObject, "test")).toEqualTypeOf<
 			SQL<string>
 		>()
 		expectTypeOf(
-			jsonElementAsText(tests.jsonNestedObject, "nested"),
+			jsonFieldByKeyAsText(tests.jsonNestedObject, "nested"),
 		).toEqualTypeOf<SQL<string>>()
 	})
 
@@ -81,14 +85,14 @@ describe("jsonElementAsText", () => {
 			jsonObject: jsonb("json_object").$type<{ test: number }>(),
 		})
 
-		expectTypeOf(jsonElementAsText(tests.jsonString, 0)).toEqualTypeOf<
+		expectTypeOf(jsonFieldByKeyAsText(tests.jsonString, 0)).toEqualTypeOf<
 			SQL<null>
 		>()
-		expectTypeOf(jsonElementAsText(tests.jsonArray, 1)).toEqualTypeOf<
+		expectTypeOf(jsonFieldByKeyAsText(tests.jsonArray, 1)).toEqualTypeOf<
 			SQL<null>
 		>()
-		expectTypeOf(jsonElementAsText(tests.jsonObject, "missing")).toEqualTypeOf<
-			SQL<null>
-		>()
+		expectTypeOf(
+			jsonFieldByKeyAsText(tests.jsonObject, "missing"),
+		).toEqualTypeOf<SQL<null>>()
 	})
 })
