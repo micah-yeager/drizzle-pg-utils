@@ -20,7 +20,7 @@ function normalizeSelectors<
 }
 
 /** @see https://www.postgresql.org/docs/current/functions-json.html#FUNCTIONS-JSON-PROCESSING */
-export function jsonElementFromPathArray<
+export function jsonFieldByKeyArray<
 	TType,
 	U extends string | number,
 	TSelectors extends Readonly<[U, ...U[]] | never[]>,
@@ -32,7 +32,7 @@ export function jsonElementFromPathArray<
 }
 
 /** @see https://www.postgresql.org/docs/current/functions-json.html#FUNCTIONS-JSON-PROCESSING */
-export function jsonElementFromPathArrayAsText<
+export function jsonFieldByKeyArrayAsText<
 	TType,
 	U extends string | number,
 	TSelectors extends Readonly<[U, ...U[]] | never[]>,

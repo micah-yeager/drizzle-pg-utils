@@ -4,15 +4,15 @@ import { expect, it } from "vitest"
 import { selectExpression } from "../../../test/utils/select-expression"
 import { cast } from "../../functions/cast"
 import {
-	jsonElementFromPathArray,
-	jsonElementFromPathArrayAsText,
-} from "./json-element-from-path"
+	jsonFieldByKeyArray,
+	jsonFieldByKeyArrayAsText,
+} from "./json-field-by-key-array"
 
 const testObj = { test: 0, nested: { key: "value" } } as const
 const keys = ["nested", "key"] as const
 
-it("should execute correctly with jsonElementFromPathArray", async () => {
-	const expression = jsonElementFromPathArray(
+it("should execute correctly with jsonFieldByKeyArray", async () => {
+	const expression = jsonFieldByKeyArray(
 		cast(sql`${JSON.stringify(testObj)}`, json),
 		keys,
 	)
@@ -22,8 +22,8 @@ it("should execute correctly with jsonElementFromPathArray", async () => {
 	)
 })
 
-it("should execute correctly with jsonElementFromPathArrayAsText", async () => {
-	const expression = jsonElementFromPathArrayAsText(
+it("should execute correctly with jsonFieldByKeyArrayAsText", async () => {
+	const expression = jsonFieldByKeyArrayAsText(
 		cast(sql`${JSON.stringify(testObj)}`, json("").$type<typeof testObj>()),
 		keys,
 	)
