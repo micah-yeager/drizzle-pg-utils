@@ -1,7 +1,7 @@
 import { type SQL, sql } from "drizzle-orm"
 import type { IsAny, IsUnknown } from "type-fest"
 import type { JsonColumn } from "../../functions/json/utils/column-types"
-import type { JsonFieldByKey } from "./util/types"
+import type { JsonFieldByKey } from "./utils/types"
 
 /** @see https://www.postgresql.org/docs/current/functions-json.html#FUNCTIONS-JSON-PROCESSING */
 export function jsonValueByKey<

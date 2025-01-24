@@ -1,4 +1,4 @@
-import { PgUtilError } from "../../error"
+import { PgUtilError } from "../../utils/error"
 
 /**
  * General error occurring while generating SQL functions. All function errors

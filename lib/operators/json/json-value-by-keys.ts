@@ -1,7 +1,7 @@
 import { SQL, sql } from "drizzle-orm"
 import type { IsAny, IsUnknown } from "type-fest"
 import type { JsonColumn } from "../../functions/json/utils/column-types"
-import type { JsonFieldByKey } from "./util/types"
+import type { JsonFieldByKey } from "./utils/types"
 
 /**
  * Normalizes the selectors for a JSON path array.
