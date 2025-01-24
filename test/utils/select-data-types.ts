@@ -62,6 +62,14 @@ export function selectDataTypes(tableOrView: TableLike) {
 		.$dynamic()
 }
 
+/**
+ * Assert that the type name reported by `pg_attribute` matches the expected
+ * value for a column.
+ *
+ * @param rows - Rows returned by {@link selectDataTypes}.
+ * @param columnName - The column name to check.
+ * @param dataTypeName - The type name to assert.
+ */
 export function expectDataType(
 	rows: Awaited<ReturnType<typeof selectDataTypes>>,
 	columnName: string,

@@ -49,6 +49,7 @@ export function parseOrdinatePairs<
 	return pairs as TReturn
 }
 
+/** Error thrown while executing {@link parseOrdinatePairs}. */
 export class OrdinateParseError extends Error {
 	constructor(message: string) {
 		super(message)
