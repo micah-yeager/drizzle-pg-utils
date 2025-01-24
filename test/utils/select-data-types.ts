@@ -1,14 +1,11 @@
-import { and, eq, gt, is, not, sql } from "drizzle-orm"
-import { PgTable, type PgView } from "drizzle-orm/pg-core"
+import { and, eq, getTableLikeName, gt, not, sql } from "drizzle-orm"
+import type { TableLike } from "drizzle-orm/query-builders/select.types"
 import { expect } from "vitest"
 import { cast } from "../../lib/functions/cast"
 import { regclass } from "../../lib/system-catalogs/columns/regclass"
 import { formatType } from "../../lib/system-catalogs/functions/format-type"
 import { pgAttribute } from "../../lib/system-catalogs/pg-attribute"
 import { pgClass } from "../../lib/system-catalogs/pg-class"
-
-const TableName = Symbol.for("drizzle:Name")
-const ViewBaseConfig = Symbol.for("drizzle:ViewBaseConfig")
 
 /**
  * Get specific data types for a table's columns.
@@ -44,12 +41,9 @@ const ViewBaseConfig = Symbol.for("drizzle:ViewBaseConfig")
  *
  * @param tableOrView - A table or view.
  */
-export function selectDataTypes(tableOrView: PgTable | PgView) {
-	const tableName: string = is(tableOrView, PgTable)
-		? // @ts-expect-error: Not part of the type, but does exist.
-			tableOrView[TableName]
-		: // @ts-expect-error: Not part of the type, but does exist.
-			tableOrView[ViewBaseConfig].name
+export function selectDataTypes(tableOrView: TableLike) {
+	const tableName = getTableLikeName(tableOrView)
+	if (!tableName) throw new Error("Cannot determine name for table-like")
 
 	return globalThis.db
 		.select({
