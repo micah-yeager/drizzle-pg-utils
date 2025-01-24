@@ -1,7 +1,7 @@
 import { type SQL, type SQLWrapper, is, sql } from "drizzle-orm"
 import { PgColumn, PgColumnBuilder, PgTable } from "drizzle-orm/pg-core"
 import type { IsAny, IsUnknown } from "type-fest"
-import type { TypeFromSQL } from "../util"
+import type { TypeFromSQL } from "../utils/type-from-sql"
 import { PgUtilFunctionError } from "./util/error"
 
 /** A blank table to use for casting. */

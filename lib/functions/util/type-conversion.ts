@@ -5,7 +5,8 @@ import type {
 	LiteralToPrimitiveDeep,
 	UnionToIntersection,
 } from "type-fest"
-import type { TypeFromSQL } from "../../util"
+
+import type { TypeFromSQL } from "../../utils/type-from-sql"
 
 /**
  * Separate the `NormalizeInputs` logic, so the `TypeFromSQL<T[number]>` used in

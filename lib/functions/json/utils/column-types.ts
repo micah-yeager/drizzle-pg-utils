@@ -1,4 +1,4 @@
-import type { RestrictedColumn } from "../../../util"
+import type { RestrictedColumn } from "../../../utils/restricted-column"
 
 /**
  * A typed, text-based JSON column.
