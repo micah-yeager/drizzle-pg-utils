@@ -1,41 +1,105 @@
 import { type SQL, sql } from "drizzle-orm"
-import { integer, json, text } from "drizzle-orm/pg-core"
-import { assertType, expectTypeOf, it } from "vitest"
+import { integer, json, pgTable, text } from "drizzle-orm/pg-core"
+import { describe, expectTypeOf, it } from "vitest"
+import { type CircleTuple, circle } from "../columns/circle"
+import { money } from "../columns/money"
 import { cast } from "./cast"
 
 type TestJson = { test: string; nested: { test: number }; literal: "literal" }
 
-it("should extract type from uninitialized function builders", () => {
-	assertType<SQL<string>>(cast(sql``, text))
-	assertType<SQL<number>>(cast(sql``, integer))
-	expectTypeOf(cast(sql``, json)).toEqualTypeOf<SQL<unknown>>()
+it("should return as unknown if using string to cast", () => {
+	expectTypeOf(cast(sql``, "text")).toEqualTypeOf<SQL<unknown>>()
 })
 
-it("should extract type from simple initialized function builders", () => {
-	assertType<SQL<string>>(cast(sql``, text("text")))
-	assertType<SQL<number>>(cast(sql``, integer("integer")))
-	expectTypeOf(cast(sql``, json("json"))).toEqualTypeOf<SQL<unknown>>()
+describe("return type override", () => {
+	it("should return correctly for unknown types", () => {
+		expectTypeOf(cast<TestJson>(sql``, json)).toEqualTypeOf<SQL<TestJson>>()
+	})
+
+	it("should return correctly for inferred types", () => {
+		expectTypeOf(cast<number>(sql``, text)).toEqualTypeOf<SQL<number>>()
+	})
 })
 
-it("should extract type from more complex initialized function builders", () => {
-	assertType<SQL<("enum1" | "enum2")[]>>(
-		cast(sql``, text("enum", { enum: ["enum1", "enum2"] }).array()),
-	)
-	expectTypeOf(cast(sql``, json("json").$type<TestJson>())).toEqualTypeOf<
-		SQL<TestJson>
-	>()
+describe("column builder function", () => {
+	it("should return correctly for built-in type", () => {
+		expectTypeOf(cast(sql``, integer)).toEqualTypeOf<SQL<number>>()
+	})
+
+	it("should return correctly for custom type from `customType()`", () => {
+		expectTypeOf(cast(sql``, money)).toEqualTypeOf<SQL<string>>()
+	})
+
+	it("should return correctly for custom type from `PgColumnBuilder`", () => {
+		expectTypeOf(cast(sql``, circle)).toEqualTypeOf<SQL<CircleTuple>>()
+	})
 })
 
-it("should extract type from table column", () => {
-	const tests = {
-		text: text("text"),
-		integer: integer("integer"),
-		json: json("json"),
-		typedJson: json("json").$type<TestJson>(),
-	}
+describe("column builder", () => {
+	it("should return correctly for built-in type", () => {
+		expectTypeOf(cast(sql``, integer())).toEqualTypeOf<SQL<number>>()
+	})
 
-	assertType<SQL<string>>(cast(sql`1`, tests.text))
-	assertType<SQL<number>>(cast(sql`1`, tests.integer))
-	expectTypeOf(cast(sql`1`, tests.json)).toEqualTypeOf<SQL<unknown>>()
-	assertType<SQL<TestJson>>(cast(sql`1`, tests.typedJson))
+	it("should return correctly for custom type from `customType()`", () => {
+		expectTypeOf(cast(sql``, money())).toEqualTypeOf<SQL<string>>()
+	})
+
+	it("should return correctly for custom type from `PgColumnBuilder`", () => {
+		expectTypeOf(cast(sql``, circle())).toEqualTypeOf<SQL<CircleTuple>>()
+	})
+
+	it("should return correctly for array", () => {
+		expectTypeOf(cast(sql``, integer().array())).toEqualTypeOf<SQL<number[]>>()
+	})
+
+	it("should return correctly for `$type()`", () => {
+		expectTypeOf(cast(sql``, json().$type<TestJson>())).toEqualTypeOf<
+			SQL<TestJson>
+		>()
+	})
+
+	it("should return correctly for enum", () => {
+		expectTypeOf(
+			cast(sql``, text("enum", { enum: ["enum1", "enum2"] }).array()),
+		).toEqualTypeOf<SQL<("enum1" | "enum2")[]>>()
+	})
+})
+
+describe("table column", () => {
+	const table = pgTable("", {
+		builtIn: integer(),
+		customType: money(),
+		columnBuilder: circle(),
+		array: integer().array(),
+		typed: json().$type<TestJson>(),
+		enum: text("enum", { enum: ["enum1", "enum2"] }).array(),
+	})
+
+	it("should return correctly for built-in type", () => {
+		expectTypeOf(cast(sql``, table.builtIn)).toEqualTypeOf<SQL<number>>()
+	})
+
+	it("should return correctly for custom type from `customType()`", () => {
+		expectTypeOf(cast(sql``, table.customType)).toEqualTypeOf<SQL<string>>()
+	})
+
+	it("should return correctly for custom type from `PgColumnBuilder`", () => {
+		expectTypeOf(cast(sql``, table.columnBuilder)).toEqualTypeOf<
+			SQL<CircleTuple>
+		>()
+	})
+
+	it("should return correctly for array", () => {
+		expectTypeOf(cast(sql``, table.array)).toEqualTypeOf<SQL<number[]>>()
+	})
+
+	it("should return correctly for `$type()`", () => {
+		expectTypeOf(cast(sql``, table.typed)).toEqualTypeOf<SQL<TestJson>>()
+	})
+
+	it("should return correctly for enum", () => {
+		expectTypeOf(cast(sql``, table.enum)).toEqualTypeOf<
+			SQL<("enum1" | "enum2")[]>
+		>()
+	})
 })

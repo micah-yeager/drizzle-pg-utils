@@ -1,47 +1,49 @@
-import { type SQL, type SQLWrapper, sql } from "drizzle-orm"
-import type {
-	ColumnBuilderBase,
-	ColumnBuilderBaseConfig,
-	ColumnDataType,
-	MakeColumnConfig,
-} from "drizzle-orm/column-builder"
-import {
-	type AnyPgTable,
-	PgColumn,
-	type PgColumnBuilder,
-	PgTable,
-} from "drizzle-orm/pg-core"
+import { type SQL, type SQLWrapper, is, sql } from "drizzle-orm"
+import { PgColumn, PgColumnBuilder, PgTable } from "drizzle-orm/pg-core"
+import type { IsAny, IsUnknown } from "type-fest"
 import type { TypeFromSQL } from "../util"
-
-/** Mimic the internal `build` method on PgColumnBuilder. */
-interface PgColumnBuilder_ extends PgColumnBuilder {
-	build(
-		table: AnyPgTable<{ name: string }>,
-	): PgColumn<
-		MakeColumnConfig<ColumnBuilderBaseConfig<ColumnDataType, string>, string>
-	>
-}
+import { PgUtilFunctionError } from "./util/error"
 
 /** A blank table to use for casting. */
 const blankTable = new PgTable("", undefined, "")
 
 /** @see https://www.postgresql.org/docs/17/sql-expressions.html#SQL-SYNTAX-TYPE-CASTS */
-export function cast<T extends PgColumn | ColumnBuilderBase>(
+export function cast<
+	TReturn,
+	TType extends PgColumn | PgColumnBuilder<any> | string = any,
+>(
 	expression: SQLWrapper,
-	type: T | ((...args: any[]) => T),
-): SQL<TypeFromSQL<T, { nullable: false }>> {
-	let sqlType: string
-	// Column instance.
-	if (type instanceof PgColumn) {
-		sqlType = type.getSQLType()
+	type: TType | ((...args: any[]) => TType),
+): SQL<
+	IsUnknown<TReturn> extends true
+		? IsAny<TType> extends true
+			? unknown
+			: TType extends string
+				? unknown
+				: TypeFromSQL<TType, { nullable: false }>
+		: TReturn
+> {
+	const unwrappedType = typeof type === "function" ? type() : type
+
+	let normalizedType: string
+	// String.
+	if (typeof unwrappedType === "string") {
+		normalizedType = unwrappedType
 	}
-	// Column builder.
+	// Column instance.
+	else if (is(unwrappedType, PgColumn)) {
+		normalizedType = unwrappedType.getSQLType()
+	}
+	// Column builder instance.
+	else if (is(unwrappedType, PgColumnBuilder)) {
+		normalizedType = unwrappedType.build(blankTable).getSQLType()
+	}
+	// Throw error if not matched.
 	else {
-		const builder = (
-			typeof type === "object" ? type : type()
-		) as PgColumnBuilder_
-		sqlType = builder.build(blankTable).getSQLType()
+		throw new PgUtilFunctionError(
+			`${String(type)} is not a column, column builder, or string`,
+		)
 	}
 
-	return sql`cast(${expression} as ${sql.raw(sqlType)})`
+	return sql`cast(${expression} as ${sql.raw(normalizedType)})`
 }
