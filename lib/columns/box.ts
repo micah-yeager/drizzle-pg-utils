@@ -3,13 +3,13 @@ import {
 	type ColumnBuilderRuntimeConfig,
 	type Equal,
 	entityKind,
+	getColumnNameAndConfig,
 } from "drizzle-orm"
 import type {
 	ColumnBuilderBaseConfig,
 	MakeColumnConfig,
 } from "drizzle-orm/column-builder"
 import { type AnyPgTable, PgColumn, PgColumnBuilder } from "drizzle-orm/pg-core"
-import { getColumnNameAndConfig } from "../../vendor/drizzle-orm/utils"
 import {
 	type OrdinateObject,
 	type OrdinateTuple,
